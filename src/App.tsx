@@ -54,7 +54,7 @@ type ActiveMessageProps = Readonly<{
 
 type TypeIntoInputCallback = (text: string, onDone?: () => void) => void;
 
-const SOUND_SRC = "/interview/sound1.mp3";
+const SOUND_SRC = `${import.meta.env.BASE_URL}sound1.mp3`;
 
 const CONVERSATION: ConversationItem[] = [
     {
@@ -70,7 +70,7 @@ const CONVERSATION: ConversationItem[] = [
         audioLabel: "Les missions confiées",
         audioDuration: "1:05",
         audioWaveform: [4, 8, 6, 10, 7, 5, 9, 11, 6, 8, 4, 7, 10, 8, 5, 9, 6, 11, 7, 4, 8, 6, 9, 5, 10, 7, 4, 8, 6, 9],
-        audioSrc: "/interview/sound.mp3",
+        audioSrc: `${import.meta.env.BASE_URL}sound.mp3`
     },
     {
         id: 3,
@@ -78,7 +78,7 @@ const CONVERSATION: ConversationItem[] = [
         audioLabel: "Évaluation et progression",
         audioDuration: "0:58",
         audioWaveform: [6, 4, 9, 7, 11, 5, 8, 6, 10, 4, 7, 9, 5, 8, 11, 6, 4, 9, 7, 5, 10, 8, 6, 4, 9, 7, 11, 5, 8, 6],
-        audioSrc: "/interview/sound2.mp3",
+        audioSrc: `${import.meta.env.BASE_URL}sound2.mp3`
     },
     {
         id: 4,
@@ -86,7 +86,7 @@ const CONVERSATION: ConversationItem[] = [
         audioLabel: "Compétences développées",
         audioDuration: "1:12",
         audioWaveform: [5, 9, 7, 4, 10, 8, 6, 11, 5, 7, 9, 4, 8, 6, 10, 5, 7, 11, 4, 9, 6, 8, 5, 10, 7, 4, 9, 6, 11, 8],
-        audioSrc: "/interview/sound3.mp3",
+        audioSrc: `${import.meta.env.BASE_URL}sound3.mp3`
     },
     {
         id: 5,
@@ -94,7 +94,7 @@ const CONVERSATION: ConversationItem[] = [
         audioLabel: "Conseils et perspectives",
         audioDuration: "1:20",
         audioWaveform: [7, 5, 10, 8, 4, 11, 6, 9, 5, 8, 10, 6, 4, 9, 7, 11, 5, 8, 6, 10, 4, 7, 9, 5, 11, 8, 6, 4, 10, 7],
-        audioSrc: "/interview/sound4.mp3",
+        audioSrc: `${import.meta.env.BASE_URL}sound4.mp3`,
     },
 ];
 
