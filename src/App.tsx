@@ -26,6 +26,17 @@ type ConversationItem = {
     readonly audioSrc?: string;
 };
 
+type Contact = {
+    readonly id: string;
+    readonly initials: string;
+    readonly name: string;
+    readonly role: string;
+    readonly preview: string;
+    readonly status: string;
+    readonly gradient: string;
+    readonly textColor: string;
+};
+
 type AudioPlayerProps = Readonly<{
     waveform: number[];
     duration: string;
@@ -52,9 +63,46 @@ type ActiveMessageProps = Readonly<{
     onAudioMounted?: () => void;
 }>;
 
+type ContactListProps = Readonly<{
+    onSelectContact: (contact: Contact) => void;
+}>;
+
 type TypeIntoInputCallback = (text: string, onDone?: () => void) => void;
 
 const SOUND_SRC = `${import.meta.env.BASE_URL}sound1.mp3`;
+
+const CONTACTS: Contact[] = [
+    {
+        id: "ms",
+        initials: "MS",
+        name: "Maître de stage",
+        role: "Entretien de stage",
+        preview: "5 questions sur vos missions, votre progression et la suite du parcours.",
+        status: "En ligne",
+        gradient: `linear-gradient(135deg,${C.primaryPale},${C.border})`,
+        textColor: C.primary,
+    },
+    {
+        id: "tm",
+        initials: "TM",
+        name: "Tuteur mémoire",
+        role: "Suivi pédagogique",
+        preview: "Conversation disponible pour préparer la restitution du rapport.",
+        status: "Disponible",
+        gradient: `linear-gradient(135deg,${C.primary},${C.primaryLight})`,
+        textColor: "#fff",
+    },
+    {
+        id: "nw",
+        initials: "NW",
+        name: "Nina Weber",
+        role: "Ressources humaines",
+        preview: "Échange autour des compétences et des perspectives professionnelles.",
+        status: "Disponible",
+        gradient: `linear-gradient(135deg,#e0f2fe,#bae6fd)`,
+        textColor: C.primary,
+    },
+];
 
 const CONVERSATION: ConversationItem[] = [
     {
@@ -307,26 +355,6 @@ function AudioPlayer({ waveform, duration, animate = false, onMounted, audioSrc 
     );
 }
 
-function TypingDots() {
-    return (
-        <div style={{
-            display: "flex", gap: 5, alignItems: "center",
-            padding: "10px 16px", borderRadius: 16,
-            background: C.bgCard, border: `1px solid ${C.border}`,
-            boxShadow: `0 1px 8px ${C.primaryShadow}`,
-            width: "fit-content", animation: "fadeUp 0.3s ease",
-        }}>
-            {[0, 1, 2].map(i => (
-                <span key={i} style={{
-                    display: "block", width: 7, height: 7, borderRadius: "50%",
-                    background: C.dot,
-                    animation: `dotBounce 1s ease-in-out ${i * 0.18}s infinite`,
-                }} />
-            ))}
-        </div>
-    );
-}
-
 function Avatar({ label, gradient, textColor, border, shadow, size = 32 }: AvatarProps) {
     return (
         <div style={{
@@ -378,41 +406,11 @@ function StaticMessage({ item }: StaticMessageProps) {
 }
 
 function ActiveMessage({ item, onAudioMounted }: ActiveMessageProps) {
-    const [displayed, setDisplayed] = useState("");
-    const [qDone, setQDone] = useState(false);
-    const [showDots, setShowDots] = useState(false);
     const [showAudio, setShowAudio] = useState(false);
-    const timerRef = useRef<number | null>(null);
 
     useEffect(() => {
-        let i = 0;
-        timerRef.current = globalThis.setInterval(() => {
-            i++;
-            setDisplayed(item.question.slice(0, i));
-            if (i >= item.question.length) {
-                if (timerRef.current !== null) globalThis.clearInterval(timerRef.current);
-                setQDone(true);
-            }
-        }, 34);
-        return () => {
-            if (timerRef.current !== null) globalThis.clearInterval(timerRef.current);
-        };
+        setShowAudio(true);
     }, [item.question]);
-
-    useEffect(() => {
-        if (!qDone) return;
-        const timer = globalThis.setTimeout(() => setShowDots(true), 500);
-        return () => globalThis.clearTimeout(timer);
-    }, [qDone]);
-
-    useEffect(() => {
-        if (!showDots) return;
-        const timer = globalThis.setTimeout(() => {
-            setShowDots(false);
-            setShowAudio(true);
-        }, 1600);
-        return () => globalThis.clearTimeout(timer);
-    }, [showDots]);
 
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: 14, width: "100%" }}>
@@ -426,14 +424,7 @@ function ActiveMessage({ item, onAudioMounted }: ActiveMessageProps) {
                     boxShadow: `0 4px 20px ${C.primaryShadow}`,
                     animation: "slideRight 0.35s ease",
                 }}>
-                    {displayed}
-                    {!qDone && (
-                        <span style={{
-                            display: "inline-block", width: 2, height: "1em",
-                            background: "rgba(255,255,255,0.75)", marginLeft: 2, verticalAlign: "middle",
-                            animation: "blink 0.55s step-end infinite",
-                        }} />
-                    )}
+                    {item.question}
                 </div>
                 <Avatar label="TM"
                     gradient={`linear-gradient(135deg,${C.primary},${C.primaryLight})`}
@@ -447,7 +438,6 @@ function ActiveMessage({ item, onAudioMounted }: ActiveMessageProps) {
                     textColor={C.primary} border={`2px solid ${C.border}`}
                     shadow={`0 2px 8px ${C.primaryShadow}`} />
                 <div>
-                    {showDots && <TypingDots />}
                     {showAudio && (
                         <div>
                             <AudioPlayer
@@ -469,7 +459,98 @@ function ActiveMessage({ item, onAudioMounted }: ActiveMessageProps) {
     );
 }
 
+function ContactList({ onSelectContact }: ContactListProps) {
+    return (
+        <div style={{
+            flex: 1, overflowY: "auto",
+            padding: "24px 16px",
+            display: "flex", flexDirection: "column", gap: 18,
+        }}>
+            <div style={{
+                maxWidth: 520, width: "100%", margin: "8px auto 4px",
+                animation: "fadeUp 0.45s ease",
+            }}>
+                <h2 style={{
+                    fontFamily: "'Playfair Display',serif",
+                    fontSize: "1.35rem", fontWeight: 700, color: C.text, marginBottom: 6,
+                }}>Contacts</h2>
+                <p style={{ fontSize: "0.86rem", color: C.textMuted, lineHeight: 1.55 }}>
+                    Choisissez un contact pour ouvrir la conversation.
+                </p>
+            </div>
+
+            <div style={{
+                maxWidth: 520, width: "100%", margin: "0 auto",
+                display: "flex", flexDirection: "column", gap: 10,
+            }}>
+                {CONTACTS.map((contact, index) => (
+                    <button
+                        key={contact.id}
+                        onClick={() => onSelectContact(contact)}
+                        style={{
+                            width: "100%", border: `1px solid ${C.border}`,
+                            borderRadius: 14, padding: "14px 16px",
+                            background: "rgba(255,255,255,0.9)",
+                            boxShadow: `0 2px 12px rgba(37,99,235,0.06)`,
+                            display: "flex", alignItems: "center", gap: 14,
+                            textAlign: "left", cursor: "pointer",
+                            fontFamily: "'DM Sans',sans-serif",
+                            animation: `fadeUp 0.35s ease ${index * 0.05}s both`,
+                            transition: "transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease",
+                        }}
+                        onMouseEnter={e => {
+                            e.currentTarget.style.transform = "translateY(-1px)";
+                            e.currentTarget.style.boxShadow = `0 6px 22px ${C.primaryShadow}`;
+                            e.currentTarget.style.borderColor = C.primaryBorder;
+                        }}
+                        onMouseLeave={e => {
+                            e.currentTarget.style.transform = "translateY(0)";
+                            e.currentTarget.style.boxShadow = "0 2px 12px rgba(37,99,235,0.06)";
+                            e.currentTarget.style.borderColor = C.border;
+                        }}
+                    >
+                        <Avatar
+                            label={contact.initials}
+                            gradient={contact.gradient}
+                            textColor={contact.textColor}
+                            border="2px solid #fff"
+                            shadow={`0 2px 8px ${C.primaryShadow}`}
+                            size={46}
+                        />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{
+                                display: "flex", alignItems: "center", justifyContent: "space-between",
+                                gap: 12, marginBottom: 3,
+                            }}>
+                                <strong style={{
+                                    color: C.text, fontSize: "0.96rem", fontWeight: 700,
+                                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                                }}>{contact.name}</strong>
+                                <span style={{
+                                    flexShrink: 0, fontSize: "0.68rem", color: C.primary,
+                                    padding: "3px 8px", borderRadius: 99,
+                                    background: C.primaryPale, border: `1px solid ${C.primaryBorder}`,
+                                    fontFamily: "monospace",
+                                }}>{contact.status}</span>
+                            </div>
+                            <p style={{ color: C.primary, fontSize: "0.75rem", fontWeight: 600, marginBottom: 3 }}>
+                                {contact.role}
+                            </p>
+                            <p style={{
+                                color: C.textMuted, fontSize: "0.78rem", lineHeight: 1.45,
+                                overflow: "hidden", display: "-webkit-box",
+                                WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
+                            }}>{contact.preview}</p>
+                        </div>
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
+}
+
 export default function InterviewStage() {
+    const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [doneIds, setDoneIds] = useState<number[]>([]);
     const [activeIdx, setActiveIdx] = useState(-1);
     const [inputValue, setInputValue] = useState("");
@@ -482,6 +563,12 @@ export default function InterviewStage() {
 
     const nextIdx = doneIds.length;
     const isFinished = doneIds.length >= CONVERSATION.length;
+
+    useEffect(() => {
+        return () => {
+            if (typeRef.current !== null) globalThis.clearInterval(typeRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -504,6 +591,26 @@ export default function InterviewStage() {
             }
         }, 32);
     }, []);
+
+    const resetConversation = useCallback(() => {
+        if (typeRef.current !== null) globalThis.clearInterval(typeRef.current);
+        setDoneIds([]);
+        setActiveIdx(-1);
+        setInputValue("");
+        setIsTyping(false);
+        setCanSend(false);
+        setPillReady(true);
+    }, []);
+
+    const handleContactSelect = useCallback((contact: Contact) => {
+        resetConversation();
+        setSelectedContact(contact);
+    }, [resetConversation]);
+
+    const handleBackToContacts = useCallback(() => {
+        resetConversation();
+        setSelectedContact(null);
+    }, [resetConversation]);
 
     const handlePillClick = () => {
         setPillReady(false);
@@ -530,6 +637,71 @@ export default function InterviewStage() {
             }, 600);
         }
     }, [activeIdx, typeIntoInput]);
+
+    if (!selectedContact) {
+        return (
+            <>
+                <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{background:${C.bg}}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        ::-webkit-scrollbar{width:4px}
+        ::-webkit-scrollbar-thumb{background:${C.primaryBorder};border-radius:2px}
+      `}</style>
+
+                <div style={{
+                    height: "100vh", display: "flex", flexDirection: "column",
+                    background: `linear-gradient(160deg,#f0f7ff 0%,#e8f2ff 60%,#f5f9ff 100%)`,
+                    fontFamily: "'DM Sans',sans-serif",
+                    color: C.text, overflow: "hidden", maxWidth: 720, margin: "0 auto",
+                }}>
+                    <header style={{
+                        flexShrink: 0,
+                        display: "flex", alignItems: "center", justifyContent: "space-between",
+                        padding: "14px 24px",
+                        borderBottom: `1px solid ${C.border}`,
+                        background: "rgba(255,255,255,0.75)",
+                        backdropFilter: "blur(16px)",
+                    }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                            <div style={{ display: "flex" }}>
+                                {CONTACTS.map((contact, index) => (
+                                    <div key={contact.id} style={{
+                                        width: 36, height: 36, borderRadius: "50%",
+                                        background: contact.gradient,
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                        fontSize: "0.65rem", fontWeight: 700, color: contact.textColor,
+                                        border: "2px solid #fff", marginLeft: index === 0 ? 0 : -10,
+                                        boxShadow: `0 2px 8px ${C.primaryShadow}`,
+                                        zIndex: CONTACTS.length - index,
+                                    }}>{contact.initials}</div>
+                                ))}
+                            </div>
+                            <div>
+                                <h1 style={{
+                                    fontFamily: "'Playfair Display',serif",
+                                    fontSize: "1rem", fontWeight: 700, color: C.text, lineHeight: 1.2,
+                                }}>Rapport de Stage</h1>
+                                <p style={{ fontSize: "0.72rem", color: C.textMuted, fontFamily: "monospace" }}>
+                                    {CONTACTS.length} contacts
+                                </p>
+                            </div>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <span style={{
+                                width: 8, height: 8, borderRadius: "50%",
+                                background: "#4ade80", boxShadow: "0 0 6px #4ade80", display: "inline-block",
+                            }} />
+                            <span style={{ fontSize: "0.72rem", color: C.textMuted, fontFamily: "monospace" }}>Contacts</span>
+                        </div>
+                    </header>
+
+                    <ContactList onSelectContact={handleContactSelect} />
+                </div>
+            </>
+        );
+    }
 
     return (
         <> 
@@ -561,37 +733,42 @@ export default function InterviewStage() {
                     backdropFilter: "blur(16px)",
                 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                        <div style={{ display: "flex" }}>
-                            <div style={{
-                                width: 36, height: 36, borderRadius: "50%",
-                                background: `linear-gradient(135deg,${C.primary},${C.primaryLight})`,
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                fontSize: "0.7rem", fontWeight: 700, color: "#fff",
-                                border: "2px solid #fff", zIndex: 2,
-                                boxShadow: `0 2px 8px ${C.primaryShadow}`,
-                            }}>TM</div>
-                            <div style={{
-                                width: 36, height: 36, borderRadius: "50%",
-                                background: `linear-gradient(135deg,${C.primaryPale},${C.border})`,
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                fontSize: "0.65rem", fontWeight: 700, color: C.primary,
-                                border: "2px solid #fff", marginLeft: -10,
-                                boxShadow: `0 2px 8px ${C.primaryShadow}`,
-                            }}>MS</div>
-                             <div style={{
-                                width: 36, height: 36, borderRadius: "50%",
-                                background: `linear-gradient(135deg,${C.primaryPale},${C.border})`,
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                fontSize: "0.65rem", fontWeight: 700, color: C.primary,
-                                border: "2px solid #fff", marginLeft: -10,
-                                boxShadow: `0 2px 8px ${C.primaryShadow}`,
-                            }}>NW</div>
-                        </div>
+                        {selectedContact ? (
+                            <button
+                                onClick={handleBackToContacts}
+                                aria-label="Retour aux contacts"
+                                style={{
+                                    width: 36, height: 36, borderRadius: 10,
+                                    border: `1px solid ${C.border}`, cursor: "pointer",
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    background: C.bgCard, color: C.primary,
+                                    boxShadow: `0 1px 6px rgba(37,99,235,0.08)`,
+                                }}
+                            >
+                                <svg width="17" height="17" viewBox="0 0 20 20" fill="none">
+                                    <path d="M12.5 4.5 7 10l5.5 5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
+                        ) : (
+                            <div style={{ display: "flex" }}>
+                                {CONTACTS.map((contact, index) => (
+                                    <div key={contact.id} style={{
+                                        width: 36, height: 36, borderRadius: "50%",
+                                        background: contact.gradient,
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                        fontSize: "0.65rem", fontWeight: 700, color: contact.textColor,
+                                        border: "2px solid #fff", marginLeft: index === 0 ? 0 : -10,
+                                        boxShadow: `0 2px 8px ${C.primaryShadow}`,
+                                        zIndex: CONTACTS.length - index,
+                                    }}>{contact.initials}</div>
+                                ))}
+                            </div>
+                        )}
                         <div>
                             <h1 style={{
                                 fontFamily: "'Playfair Display',serif",
                                 fontSize: "1rem", fontWeight: 700, color: C.text, lineHeight: 1.2,
-                            }}>Rapport de Stage</h1>
+                            }}>{selectedContact ? selectedContact.name : "Rapport de Stage"}</h1>
                             <p style={{ fontSize: "0.72rem", color: C.textMuted, fontFamily: "monospace" }}>
                                 Entretien · {CONVERSATION.length} questions
                             </p>
