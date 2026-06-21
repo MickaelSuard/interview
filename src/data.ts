@@ -1,6 +1,7 @@
 import type { Contact } from "./type";
 
 const sound = (name: string) => `${import.meta.env.BASE_URL}${name}`;
+const avatar = (name: string) => `${import.meta.env.BASE_URL}avatar/${name}`;
 
 const waves = {
     calm: [3, 5, 7, 9, 6, 8, 10, 7, 5, 8, 11, 9, 6, 4, 7, 9, 5, 8, 10, 6, 7, 4, 6, 9, 8, 5, 7, 10, 6, 4],
@@ -15,12 +16,12 @@ export const SOUND_SRC = sound("sound1.mp3");
 export const CONTACTS: Contact[] = [
     {
         id: "mentor",
-        initials: "MB",
-        name: "Marc Bernard",
-        role: "Maitre de stage",
+        name: "Mickael Suard",
+        role: "Ingénieur en Ingénierie Logicielle",
         preview: "Vous : Comment avez-vous organise mon integration dans l'equipe ?",
         date: "19/06",
         status: "En ligne",
+        avatarSrc: avatar("MM.jpg"),
         avatarClassName: "bg-gradient-to-br from-blue-100 to-blue-200",
         avatarTextClassName: "text-blue-700",
         conversation: [
@@ -32,7 +33,6 @@ export const CONTACTS: Contact[] = [
     },
     {
         id: "tutor",
-        initials: "CL",
         name: "Claire Laurent",
         role: "Tutrice pedagogique",
         preview: "Vous : Quels points voulez-vous voir apparaitre dans le rapport ?",
@@ -48,7 +48,6 @@ export const CONTACTS: Contact[] = [
     },
     {
         id: "project",
-        initials: "AR",
         name: "Amina Roche",
         role: "Cheffe de projet",
         preview: "Vous : Quelle place mon travail a-t-il prise dans le projet ?",
@@ -64,7 +63,6 @@ export const CONTACTS: Contact[] = [
     },
     {
         id: "dev",
-        initials: "NT",
         name: "Nolan Tessier",
         role: "Developpeur referent",
         preview: "Vous : Quelles bonnes pratiques techniques ai-je le plus progresse a appliquer ?",
@@ -80,7 +78,6 @@ export const CONTACTS: Contact[] = [
     },
     {
         id: "hr",
-        initials: "ES",
         name: "Emma Simon",
         role: "Ressources humaines",
         preview: "Vous : Quels comportements professionnels sont ressortis pendant le stage ?",
@@ -96,7 +93,6 @@ export const CONTACTS: Contact[] = [
     },
     {
         id: "manager",
-        initials: "VD",
         name: "Victor Delmas",
         role: "Responsable d'equipe",
         preview: "Vous : Quelle impression globale gardez-vous de mon passage dans l'equipe ?",

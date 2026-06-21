@@ -8,12 +8,12 @@ export type ConversationItem = {
 
 export type Contact = {
     readonly id: string;
-    readonly initials: string;
     readonly name: string;
     readonly role: string;
     readonly preview: string;
     readonly date: string;
     readonly status: string;
+    readonly avatarSrc?: string;
     readonly avatarClassName: string;
     readonly avatarTextClassName: string;
     readonly conversation: ConversationItem[];

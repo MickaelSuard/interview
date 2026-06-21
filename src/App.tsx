@@ -48,6 +48,15 @@ function cn(...classes: Array<string | false | undefined>) {
     return classes.filter(Boolean).join(" ");
 }
 
+function getInitials(name: string) {
+    return name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part[0]?.toUpperCase() ?? "")
+        .join("");
+}
+
 function AudioPlayer({ waveform, duration, animate = false, onMounted, audioSrc }: AudioPlayerProps) {
     const [playing, setPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -183,14 +192,20 @@ function AudioPlayer({ waveform, duration, animate = false, onMounted, audioSrc 
 }
 
 function Avatar({ contact, label, size = "md", variant = "contact" }: AvatarProps) {
-    const sizeClass = size === "lg" ? "h-[60px] w-[60px] text-base" : size === "sm" ? "h-9 w-9 text-[0.68rem]" : "h-10 w-10 text-xs";
+    const [imageError, setImageError] = useState(false);
+    const sizeClass = size === "lg" ? "h-11 w-11 text-sm" : size === "sm" ? "h-11 w-11 text-[0.62rem]" : "h-11 w-11 text-[0.68rem]";
     const visualClass = variant === "me"
         ? "bg-gradient-to-br from-blue-600 to-blue-500 text-white"
         : `${contact?.avatarClassName ?? "bg-gray-200"} ${contact?.avatarTextClassName ?? "text-gray-700"}`;
+    const showImage = variant === "contact" && contact?.avatarSrc && !imageError;
 
     return (
-        <div className={cn("flex shrink-0 items-center justify-center rounded-full border border-white/80 font-bold shadow-[0_2px_8px_rgba(37,99,235,0.18)]", sizeClass, visualClass)}>
-            {label ?? contact?.initials}
+        <div className={cn("flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/80 font-bold shadow-[0_2px_8px_rgba(37,99,235,0.18)]", sizeClass, visualClass)}>
+            {showImage ? (
+                <img src={contact.avatarSrc} alt={contact.name} className="h-full w-full scale-[1.01] object-cover object-center antialiased" onError={() => setImageError(true)}/>
+            ) : (
+                label ?? (contact ? getInitials(contact.name) : "")
+            )}
         </div>
     );
 }
@@ -370,7 +385,7 @@ export default function InterviewStage() {
     if (!selectedContact) {
         return (
             <div className="mx-auto flex h-screen max-w-180 flex-col overflow-hidden bg-[#f2f2f2] font-sans text-gray-800">
-                <header className="flex shrink-0 items-center justify-between bg-[#f2f2f2] px-2 py-2.5">
+                <header className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-white/75 px-4.5 py-3.5 backdrop-blur-2xl">
                     <div>
                         <h1 className="text-base leading-tight font-semibold text-gray-600">Contacts</h1>
                         <p className="text-[0.72rem] text-gray-500">{CONTACTS.length} conversations</p>
