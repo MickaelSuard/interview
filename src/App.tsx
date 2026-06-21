@@ -4,7 +4,6 @@ import type { Contact, ConversationItem } from "./type";
 
 type AudioPlayerProps = Readonly<{
     waveform: number[];
-    duration: string;
     audioSrc?: string;
     animate?: boolean;
     onMounted?: () => void;
@@ -57,10 +56,21 @@ function getInitials(name: string) {
         .join("");
 }
 
-function AudioPlayer({ waveform, duration, animate = false, onMounted, audioSrc }: AudioPlayerProps) {
+function formatAudioDuration(duration: number) {
+    if (!Number.isFinite(duration) || duration <= 0) return "0:00";
+
+    const totalSeconds = Math.round(duration);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+
+function AudioPlayer({ waveform, animate = false, onMounted, audioSrc }: AudioPlayerProps) {
     const [playing, setPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const [durationSeconds, setDurationSeconds] = useState(0);
+    const [durationLabel, setDurationLabel] = useState("0:00");
     const [visible, setVisible] = useState(!animate);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const calledRef = useRef(false);
@@ -77,6 +87,7 @@ function AudioPlayer({ waveform, duration, animate = false, onMounted, audioSrc 
         const handleLoadedMetadata = () => {
             if (audio.duration > 0) {
                 setDurationSeconds(audio.duration);
+                setDurationLabel(formatAudioDuration(audio.duration));
                 setProgress((audio.currentTime / audio.duration) * 100);
             }
         };
@@ -186,7 +197,7 @@ function AudioPlayer({ waveform, duration, animate = false, onMounted, audioSrc 
                 })}
             </button>
 
-            <span className="shrink-0 font-mono text-[0.7rem] text-gray-500">{duration}</span>
+            <span className="shrink-0 font-mono text-[0.7rem] text-gray-500">{durationLabel}</span>
         </div>
     );
 }
@@ -233,7 +244,7 @@ function StaticMessage({ item, contact }: MessageProps) {
             <div className="flex items-end justify-start gap-2">
                 <Avatar contact={contact} />
                 <div>
-                    <AudioPlayer waveform={item.audioWaveform} duration={item.audioDuration} audioSrc={item.audioSrc} />
+                    <AudioPlayer waveform={item.audioWaveform} audioSrc={item.audioSrc} />
                 </div>
             </div>
         </div>
@@ -261,7 +272,7 @@ function ActiveMessage({ item, contact, onAudioMounted }: ActiveMessageProps) {
                 <Avatar contact={contact} />
                 <div>
                     {showAudio ? (
-                        <AudioPlayer waveform={item.audioWaveform} duration={item.audioDuration} audioSrc={item.audioSrc} animate onMounted={onAudioMounted} />
+                        <AudioPlayer waveform={item.audioWaveform} audioSrc={item.audioSrc} animate onMounted={onAudioMounted} />
                     ) : (
                         <VoiceTypingIndicator />
                     )}
@@ -428,6 +439,7 @@ export default function InterviewStage() {
                         <div className="mb-4 flex justify-center">
                             <Avatar contact={selectedContact} size="lg" />
                         </div>
+                        <h3 className="mb-2 text-[1.16rem] font-bold text-gray-800">{selectedContact.name}</h3>
                         <h2 className="mb-2 text-[1.16rem] font-bold text-gray-800">{selectedContact.role}</h2>
                         <p className="text-[0.88rem] leading-relaxed text-gray-500">Lancez la premiere question suggeree pour demarrer cet echange.</p>
                     </div>

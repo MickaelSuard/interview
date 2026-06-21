@@ -21,14 +21,14 @@ export const CONTACTS: Contact[] = [
         preview: "Vous : Comment avez-vous organise mon integration dans l'equipe ?",
         date: "19/06",
         status: "En ligne",
-        avatarSrc: avatar("MM.jpg"),
+        avatarSrc: avatar("MS.jpg"),
         avatarClassName: "bg-gradient-to-br from-blue-100 to-blue-200",
         avatarTextClassName: "text-blue-700",
         conversation: [
-            { id: 1, question: "Comment avez-vous organise mon integration dans l'equipe ?", audioDuration: "0:42", audioWaveform: waves.calm, audioSrc: sound("sound1.mp3") },
-            { id: 2, question: "Quelles responsabilites m'avez-vous confiees au fil du stage ?", audioDuration: "1:05", audioWaveform: waves.precise, audioSrc: sound("sound.mp3") },
-            { id: 3, question: "Quel moment montre le mieux ma progression selon vous ?", audioDuration: "0:58", audioWaveform: waves.bright, audioSrc: sound("sound2.mp3") },
-            { id: 4, question: "Quels conseils me donneriez-vous pour la suite de mon parcours ?", audioDuration: "1:20", audioWaveform: waves.long, audioSrc: sound("sound4.mp3") },
+            { id: 1, question: "Comment avez-vous organise mon integration dans l'equipe ?", audioWaveform: waves.calm, audioSrc: sound("sound1.mp3") },
+            { id: 2, question: "Quelles responsabilites m'avez-vous confiees au fil du stage ?", audioWaveform: waves.precise, audioSrc: sound("sound.mp3") },
+            { id: 3, question: "Quel moment montre le mieux ma progression selon vous ?", audioWaveform: waves.bright, audioSrc: sound("sound2.mp3") },
+            { id: 4, question: "Quels conseils me donneriez-vous pour la suite de mon parcours ?", audioWaveform: waves.long, audioSrc: sound("sound4.mp3") },
         ],
     },
     {
@@ -41,9 +41,9 @@ export const CONTACTS: Contact[] = [
         avatarClassName: "bg-gradient-to-br from-violet-100 to-violet-300",
         avatarTextClassName: "text-violet-800",
         conversation: [
-            { id: 1, question: "Quels points voulez-vous voir apparaitre dans le rapport ?", audioDuration: "0:47", audioWaveform: waves.precise, audioSrc: sound("sound2.mp3") },
-            { id: 2, question: "Comment relier mes missions aux competences attendues par la formation ?", audioDuration: "1:12", audioWaveform: waves.dense, audioSrc: sound("sound3.mp3") },
-            { id: 3, question: "Que dois-je clarifier avant la soutenance ?", audioDuration: "0:55", audioWaveform: waves.calm, audioSrc: sound("sound1.mp3") },
+            { id: 1, question: "Quels points voulez-vous voir apparaitre dans le rapport ?", audioWaveform: waves.precise, audioSrc: sound("sound2.mp3") },
+            { id: 2, question: "Comment relier mes missions aux competences attendues par la formation ?", audioWaveform: waves.dense, audioSrc: sound("sound3.mp3") },
+            { id: 3, question: "Que dois-je clarifier avant la soutenance ?", audioWaveform: waves.calm, audioSrc: sound("sound1.mp3") },
         ],
     },
     {
@@ -56,9 +56,9 @@ export const CONTACTS: Contact[] = [
         avatarClassName: "bg-gradient-to-br from-amber-100 to-amber-300",
         avatarTextClassName: "text-amber-800",
         conversation: [
-            { id: 1, question: "Quelle place mon travail a-t-il prise dans le projet ?", audioDuration: "0:51", audioWaveform: waves.bright, audioSrc: sound("sound.mp3") },
-            { id: 2, question: "Quelles contraintes importantes avez-vous du gerer avec l'equipe ?", audioDuration: "1:08", audioWaveform: waves.long, audioSrc: sound("sound4.mp3") },
-            { id: 3, question: "Qu'est-ce qui aurait pu rendre ma contribution encore plus utile ?", audioDuration: "0:59", audioWaveform: waves.dense, audioSrc: sound("sound3.mp3") },
+            { id: 1, question: "Quelle place mon travail a-t-il prise dans le projet ?", audioWaveform: waves.bright, audioSrc: sound("sound.mp3") },
+            { id: 2, question: "Quelles contraintes importantes avez-vous du gerer avec l'equipe ?", audioWaveform: waves.long, audioSrc: sound("sound4.mp3") },
+            { id: 3, question: "Qu'est-ce qui aurait pu rendre ma contribution encore plus utile ?", audioWaveform: waves.dense, audioSrc: sound("sound3.mp3") },
         ],
     },
     {
@@ -71,9 +71,9 @@ export const CONTACTS: Contact[] = [
         avatarClassName: "bg-gradient-to-br from-green-100 to-green-300",
         avatarTextClassName: "text-green-800",
         conversation: [
-            { id: 1, question: "Quelles bonnes pratiques techniques ai-je le plus progresse a appliquer ?", audioDuration: "0:46", audioWaveform: waves.dense, audioSrc: sound("sound3.mp3") },
-            { id: 2, question: "Comment avez-vous percu mon autonomie sur les tickets confies ?", audioDuration: "1:03", audioWaveform: waves.calm, audioSrc: sound("sound1.mp3") },
-            { id: 3, question: "Quelle competence technique devrais-je continuer a consolider ?", audioDuration: "0:57", audioWaveform: waves.precise, audioSrc: sound("sound2.mp3") },
+            { id: 1, question: "Quelles bonnes pratiques techniques ai-je le plus progresse a appliquer ?", audioWaveform: waves.dense, audioSrc: sound("sound3.mp3") },
+            { id: 2, question: "Comment avez-vous percu mon autonomie sur les tickets confies ?", audioWaveform: waves.calm, audioSrc: sound("sound1.mp3") },
+            { id: 3, question: "Quelle competence technique devrais-je continuer a consolider ?", audioWaveform: waves.precise, audioSrc: sound("sound2.mp3") },
         ],
     },
     {
@@ -86,9 +86,9 @@ export const CONTACTS: Contact[] = [
         avatarClassName: "bg-gradient-to-br from-red-100 to-red-200",
         avatarTextClassName: "text-red-800",
         conversation: [
-            { id: 1, question: "Quels comportements professionnels sont ressortis pendant le stage ?", audioDuration: "0:49", audioWaveform: waves.long, audioSrc: sound("sound4.mp3") },
-            { id: 2, question: "Comment presenter cette experience dans un futur entretien ?", audioDuration: "1:01", audioWaveform: waves.bright, audioSrc: sound("sound.mp3") },
-            { id: 3, question: "Quels points forts dois-je mettre en avant sur mon CV ?", audioDuration: "0:54", audioWaveform: waves.calm, audioSrc: sound("sound1.mp3") },
+            { id: 1, question: "Quels comportements professionnels sont ressortis pendant le stage ?", audioWaveform: waves.long, audioSrc: sound("sound4.mp3") },
+            { id: 2, question: "Comment presenter cette experience dans un futur entretien ?", audioWaveform: waves.bright, audioSrc: sound("sound.mp3") },
+            { id: 3, question: "Quels points forts dois-je mettre en avant sur mon CV ?", audioWaveform: waves.calm, audioSrc: sound("sound1.mp3") },
         ],
     },
     {
@@ -101,9 +101,9 @@ export const CONTACTS: Contact[] = [
         avatarClassName: "bg-gradient-to-br from-sky-100 to-sky-300",
         avatarTextClassName: "text-sky-800",
         conversation: [
-            { id: 1, question: "Quelle impression globale gardez-vous de mon passage dans l'equipe ?", audioDuration: "0:44", audioWaveform: waves.precise, audioSrc: sound("sound2.mp3") },
-            { id: 2, question: "En quoi mes missions ont-elles aide l'organisation de l'equipe ?", audioDuration: "1:09", audioWaveform: waves.long, audioSrc: sound("sound4.mp3") },
-            { id: 3, question: "Quelle recommandation feriez-vous pour mon prochain stage ou emploi ?", audioDuration: "1:15", audioWaveform: waves.dense, audioSrc: sound("sound3.mp3") },
+            { id: 1, question: "Quelle impression globale gardez-vous de mon passage dans l'equipe ?", audioWaveform: waves.precise, audioSrc: sound("sound2.mp3") },
+            { id: 2, question: "En quoi mes missions ont-elles aide l'organisation de l'equipe ?", audioWaveform: waves.long, audioSrc: sound("sound4.mp3") },
+            { id: 3, question: "Quelle recommandation feriez-vous pour mon prochain stage ou emploi ?", audioWaveform: waves.dense, audioSrc: sound("sound3.mp3") },
         ],
     },
 ];

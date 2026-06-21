@@ -1,7 +1,6 @@
 export type ConversationItem = {
     readonly id: number;
     readonly question: string;
-    readonly audioDuration: string;
     readonly audioWaveform: number[];
     readonly audioSrc?: string;
 };
